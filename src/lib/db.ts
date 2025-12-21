@@ -4,14 +4,13 @@
  * multiple instances during hot reloads in development, which can
  * exhaust database connections.
  */
+import { PrismaClient } from "@prisma/client";
 
-import { PrismaClient } from "@/generated/prisma/client";
-
-const globalForPrisma = global as unknown as {
-  prisma: PrismaClient;
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
 };
 
-const prisma = globalForPrisma.prisma ?? new PrismaClient({} as any);
+export const prisma = globalForPrisma.prisma || new PrismaClient();
 
 if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;
