@@ -1,24 +1,17 @@
-import { getQueryClient, trpc } from "@/trpc/server";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { Client } from "./client";
-import { Suspense } from "react";
+import { LogoutButton } from "@/components/logout-button";
+import { requireAuth } from "@/lib/auth-util";
+import { caller } from "@/trpc/server";
 
 const Page = async () => {
-  const queryClient = getQueryClient();
+  await requireAuth();
 
-  void queryClient.prefetchQuery(trpc.getUsers.queryOptions());
+  const users = await caller.getUsers(); //! this will call protectedProcedure prisma queries
 
   return (
     <main>
-      <h1>Welcome to the Home Page</h1>
-      <p>This is the main landing page of the application.</p>
-      <h2>Users List</h2>
-
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <Suspense fallback={<div>Loading users...</div>}>
-          <Client />
-        </Suspense> 
-      </HydrationBoundary>
+      <h1>Welcome to the Home Page!</h1>
+      <strong>Users: {JSON.stringify(users)}</strong>
+      <LogoutButton />
     </main>
   );
 };
