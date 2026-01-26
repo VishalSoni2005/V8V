@@ -1,7 +1,7 @@
-npx prisma migrate dev
-npx prisma generate
-
-googleformscrip
+# whenever new model made or changes in prisma.schema -> npx prisma migrate dev -> set migration name
+# to generate prismaClient type files -> npx prisma generate
+ V8-Workflow Runtime 
+googleformscript
 
 export const generateGoogleFormScript = (
   webhookUrl: string,

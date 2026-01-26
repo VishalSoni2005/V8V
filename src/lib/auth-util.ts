@@ -14,16 +14,6 @@ export const requireAuth = async () => {
   return session;
 };
 
-// export const requireUnauth = async () => {
-//   const session = await auth.api.getSession({
-//     headers: await headers(),
-//   });
-
-//   if (!session?.user) {
-//     redirect("/");
-//   }
-//   return session;
-// };
 
 export const requireUnauth = async (currentPath: string) => {
   const session = await auth.api.getSession({
