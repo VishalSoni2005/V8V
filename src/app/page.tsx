@@ -5,13 +5,14 @@ import { useTRPC } from "@/trpc/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
+import { toast } from "sonner";
 
 const Page = () => {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
 
   const { data: workflows, isLoading } = useQuery(
-    trpc.getWorkflows.queryOptions()
+    trpc.getWorkflows.queryOptions(),
   );
 
   const createWorkflow = useMutation(
@@ -21,7 +22,15 @@ const Page = () => {
 
         queryClient.invalidateQueries(trpc.getWorkflows.queryOptions());
       },
-    })
+    }),
+  );
+
+  const testAI = useMutation(
+    trpc.testAI.mutationOptions({
+      onSuccess: () => {
+        toast.success("AI test successful");
+      },
+    }),
   );
 
   useEffect(() => {
@@ -47,6 +56,10 @@ const Page = () => {
       </Button>
 
       {isLoading && <p>Loading workflows...</p>}
+
+      <Button disabled={testAI.isPending} onClick={() => testAI.mutate()}>
+        test AI
+      </Button>
 
       {workflows && (
         <ul className="space-y-2">

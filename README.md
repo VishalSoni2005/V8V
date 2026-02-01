@@ -1,3 +1,8 @@
+trpc
+inngest
+react query
+better auth
+
 # whenever new model made or changes in prisma.schema -> npx prisma migrate dev -> set migration name
 # to generate prismaClient type files -> npx prisma generate
  V8-Workflow Runtime 

@@ -2,7 +2,20 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../init";
 import prisma from "@/lib/db";
 import { inngest } from "@/inngest/client";
+import { google } from "@ai-sdk/google";
+import { generateText } from "ai";
+
 export const appRouter = createTRPCRouter({
+  testAI: protectedProcedure.mutation(async ({}) => {
+    await inngest.send({
+      name: "execute/ai",
+    });
+    return {
+      success: true,
+      msg: "success",
+    };
+  }),
+
   getWorkflows: protectedProcedure.query(({}) => {
     return prisma.workflow.findMany();
   }),
@@ -23,7 +36,7 @@ export const appRouter = createTRPCRouter({
 
   deleteWorkflow: protectedProcedure
     .input(z.object({ id: z.string() }))
-    .mutation(({ ctx, input }) => {
+    .mutation(({ input }) => {
       return prisma.workflow.delete({
         where: {
           id: input.id,
