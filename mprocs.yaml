@@ -1,0 +1,8 @@
+procs:
+  next:
+    cmd: ["npm", "run", "dev"]
+    color: blue
+
+  inngest:
+    cmd: ["npm", "run", "inngest:dev"]
+    color: green
