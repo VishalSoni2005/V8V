@@ -12,6 +12,11 @@ export const execute = inngest.createFunction(
       model: google("gemini-2.5-flash"),
       prompt: "why my girl friend left me?",
       system: "you are relation ship guide",
+      experimental_telemetry: {
+        isEnabled: true,
+        recordInputs: true,
+        recordOutputs: true,
+      },
     });
 
     return steps;
