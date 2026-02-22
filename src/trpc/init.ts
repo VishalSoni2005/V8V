@@ -3,6 +3,7 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import { cache } from "react";
 
 import { headers } from "next/headers";
+import { polarClient } from "@/lib/polar";
 
 export const createTRPCContext = cache(async () => {
   return { userId: "user_123" };
@@ -27,3 +28,23 @@ export const protectedProcedure = baseProcedure.use(async ({ ctx, next }) => {
 
   return next({ ctx: { ...ctx, auth: session } }); //! we are getting userId from here
 });
+
+export const premiumProcedure = protectedProcedure.use(
+  async ({ ctx, next }) => {
+    const customer = await polarClient.customers.getStateExternal({
+      externalId: ctx.auth.user.id,
+    });
+
+    if (
+      !customer.activeSubscriptions ||
+      customer.activeSubscriptions.length === 0
+    ) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You must be logged in to access this resource",
+      });
+    }
+
+    return next({ ctx: { ...ctx, customer } });
+  },
+);
